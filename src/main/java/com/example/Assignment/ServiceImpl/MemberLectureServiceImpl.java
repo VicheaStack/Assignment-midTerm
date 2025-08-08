@@ -3,6 +3,8 @@ package com.example.Assignment.ServiceImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +21,14 @@ import com.example.Assignment.Service.MemberLectureService;
 @Service
 public class MemberLectureServiceImpl implements MemberLectureService {
 
+	private static final Logger logger = LogManager.getLogger(MemberLectureServiceImpl.class);
+
 	private final RegistrationLectureRepository memberLectureRepository;
 	private final MemberRepository memberRepository;
     private final LectureRepository lectureRepository;
 
 	public MemberLectureServiceImpl(RegistrationLectureRepository memberLectureRepository,
-			MemberRepository memberRepository,
-			LectureRepository lectureRepository) {
+			MemberRepository memberRepository, LectureRepository lectureRepository) {
 		this.memberLectureRepository = memberLectureRepository;
 		this.memberRepository = memberRepository;
         this.lectureRepository = lectureRepository;
@@ -34,30 +37,48 @@ public class MemberLectureServiceImpl implements MemberLectureService {
 	@Transactional
     @Override
     public MemberLectureDTO saveMemberLecture(MemberLectureDTO dto) {
-		// Fetch Member entity from DB
-		Member member = memberRepository.findById(dto.getMemberId())
-				.orElseThrow(() -> new RuntimeException("Member not found"));
+		logger.info("Saving MemberLecture registration for Member ID: {} and Lecture ID: {}", dto.getMemberId(),
+				dto.getLectureId());
 
-		// Fetch Lecture entity from DB
+		Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(() -> {
+			logger.error("Member not found with ID: {}", dto.getMemberId());
+			return new RuntimeException("Member not found");
+		});
+
         Lectures lecture = lectureRepository.findById(dto.getLectureId())
-            .orElseThrow(() -> new RuntimeException("Lecture not found"));
+				.orElseThrow(() -> {
+					logger.error("Lecture not found with ID: {}", dto.getLectureId());
+					return new RuntimeException("Lecture not found");
+				});
 
-		// Create new registration entity
         MemberLecture registration = new MemberLecture();
-		registration.setMember(member); // <-- correct entity here
+		registration.setMember(member);
         registration.setLecture(lecture);
 
 		MemberLecture saved = memberLectureRepository.save(registration);
+		logger.info("MemberLecture registration saved with ID: {}", saved.getId());
+
         return MemberLectureMapper.toDTO(saved);
     }
 
     @Override
     public List<MemberLectureDTO> getAllMemberLectures() {
-		return memberLectureRepository.findAll().stream().map(MemberLectureMapper::toDTO).collect(Collectors.toList());
+		logger.info("Fetching all MemberLecture registrations");
+		List<MemberLectureDTO> dtos = memberLectureRepository.findAll().stream().map(MemberLectureMapper::toDTO)
+				.collect(Collectors.toList());
+		logger.info("Number of MemberLecture registrations found: {}", dtos.size());
+		return dtos;
     }
 
     @Override
     public MemberLectureDTO getMemberLectureById(Long id) {
-		return memberLectureRepository.findById(id).map(MemberLectureMapper::toDTO).orElse(null);
+		logger.info("Fetching MemberLecture registration by ID: {}", id);
+		MemberLectureDTO dto = memberLectureRepository.findById(id).map(MemberLectureMapper::toDTO).orElse(null);
+		if (dto == null) {
+			logger.warn("MemberLecture registration not found with ID: {}", id);
+		} else {
+			logger.info("MemberLecture registration found: {}", dto);
+		}
+		return dto;
     }
 }
