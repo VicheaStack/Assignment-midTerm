@@ -33,6 +33,7 @@ public class LectureController {
 		this.lectureService = lectureService;
 	}
 
+	// vichea
     @PostMapping("/add")
 	public ResponseEntity<LectureDTO> addLecture(@Valid @RequestBody LectureDTO lectureDTO) {
 		logger.info("Add lecture called with: {}", lectureDTO);
@@ -40,6 +41,7 @@ public class LectureController {
         return ResponseEntity.ok(saved);
     }
 
+	// vichea
     @PutMapping("/{lectureId}/edit")
     public ResponseEntity<LectureDTO> editLecture(@PathVariable Long lectureId, @RequestBody LectureDTO lectureDTO) {
 		logger.info("Edit lecture called for id: {}", lectureId);
@@ -48,6 +50,7 @@ public class LectureController {
         return ResponseEntity.ok(updated);
     }
 
+	// vichea
     @GetMapping("/list")
     public ResponseEntity<List<LectureDTO>> listLectures() {
 		logger.info("List lectures called");
@@ -55,6 +58,7 @@ public class LectureController {
         return ResponseEntity.ok(lectures);
     }
 
+	// vichea
     @GetMapping("/{lectureId}/students")
     public ResponseEntity<List<MemberDTO>> getLectureStudents(@PathVariable Long lectureId) {
 		logger.info("Get lecture students called for id: {}", lectureId);
