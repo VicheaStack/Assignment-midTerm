@@ -43,6 +43,9 @@ It demonstrates CRUD operations, entity relationships, REST APIs, and use of DTO
 - Maven 3.x
 - Git
 
+-ERD
+[https://drive.google.com/file/d/1llUOJ3_4S_cP34SaUWnbWDY0zWUH0iED/view?usp=drivesdk]
+
 ### Setup
 
 1. Clone this repository
