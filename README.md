@@ -39,7 +39,7 @@ It demonstrates CRUD operations, entity relationships, REST APIs, and use of DTO
 
 ### Prerequisites
 
-- JDK 17 or above
+- JDK 21 or above
 - Maven 3.x
 - Git
 
