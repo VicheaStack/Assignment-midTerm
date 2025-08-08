@@ -4,7 +4,11 @@ This project is a Java Spring Boot application for managing teams, members, lect
 It demonstrates CRUD operations, entity relationships, REST APIs, and use of DTOs and mapping layers.
 
 ---
-
+Leader
+Leng ChanVichea
+Member 
+poleak
+---
 ## Features
 
 - Manage Teams (Create, Read, Update)
